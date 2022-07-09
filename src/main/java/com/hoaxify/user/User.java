@@ -20,7 +20,7 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@NotBlank
+	@NotBlank(message = "{hoaxify.constraints.username.NotBlank.message}")
 	@Size(min = 4, max = 255)
 	private String username;
 	@NotBlank
@@ -28,7 +28,10 @@ public class User {
 	private String displayName;
 	@NotBlank
 	@Size(min = 8, max = 255)
-	@Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$")	//atleast 1 lowercase 1 uppercase, 1 digit
+	@Pattern(
+			regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$",
+			message = "{hoaxify.constraints.password.pattern.message}"
+	)	//atleast 1 lowercase 1 uppercase, 1 digit
 	private String password;
 	public User(String username, String displayName, String password) {
 		super();

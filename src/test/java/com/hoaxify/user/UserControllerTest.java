@@ -3,6 +3,7 @@ package com.hoaxify.user;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -175,6 +176,42 @@ public class UserControllerTest {
 		User user = new User();
 		ResponseEntity<ApiError> response = postSignUp(user, ApiError.class);
 		assertThat(response.getBody().getValidationErrors().size()).isEqualTo(3);
+	}
+	
+	@Test
+	public void postUser_whenWhenUserHasNullUsername_receiveMessageOfNullErrorForUsername() {
+		User user = new User();
+		user.setUsername(null);
+		ResponseEntity<ApiError> response = postSignUp(user, ApiError.class);
+		Map<String, String> validationErrors = response.getBody().getValidationErrors();
+		assertThat(validationErrors.get("username")).isEqualTo("Username cannot be blank");
+	}
+	
+	@Test
+	public void postUser_whenWhenUserHasNullPassword_receiveMessageOfNullErrorForPassword() {
+		User user = new User();
+		user.setUsername(null);
+		ResponseEntity<ApiError> response = postSignUp(user, ApiError.class);
+		Map<String, String> validationErrors = response.getBody().getValidationErrors();
+		assertThat(validationErrors.get("password")).isEqualTo("Cannot be blank");
+	}
+	
+	@Test
+	public void postUser_whenWhenUserHasInvalidOfUsername_receiveGenericMessageOfSizeError() {
+		User user = new User();
+		user.setUsername("abc");
+		ResponseEntity<ApiError> response = postSignUp(user, ApiError.class);
+		Map<String, String> validationErrors = response.getBody().getValidationErrors();
+		assertThat(validationErrors.get("username")).isEqualTo("It must be minimum 4 and maximum 255 characters");
+	}
+	
+	@Test
+	public void postUser_whenWhenUserHasInvalidPasswordPattern_receiveMessageOfPasswordPatternError() {
+		User user = new User();
+		user.setPassword("abcdefghij");
+		ResponseEntity<ApiError> response = postSignUp(user, ApiError.class);
+		Map<String, String> validationErrors = response.getBody().getValidationErrors();
+		assertThat(validationErrors.get("password")).isEqualTo("Password must have atleast one Uppercase, one Lowercase and one Number");
 	}
 	
 	public <T> ResponseEntity<T> postSignUp(Object request, Class<T> response){
