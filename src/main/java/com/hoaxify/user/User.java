@@ -16,12 +16,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+//@Table(uniqueConstraints = @UniqueConstraint(columnNames = "username"))	//to set unique validation at db level
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@NotBlank(message = "{hoaxify.constraints.username.NotBlank.message}")
 	@Size(min = 4, max = 255)
+	@UniqueUsername
 	private String username;
 	@NotBlank
 	@Size(min = 4, max = 255)
